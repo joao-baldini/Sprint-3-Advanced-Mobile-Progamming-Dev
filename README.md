@@ -37,8 +37,8 @@ Sprint-3-Integracao-Metaindustria/
 
 - Java 17
 - Maven 3.9 ou compatível
-- Node.js 20.19 ou superior
-- Expo Go compatível com SDK 54, em caso de teste no celular
+- Node.js 22.13 ou superior
+- Expo Go compatível com SDK 57, em caso de teste no celular
 
 ## Como subir o backend
 
@@ -68,6 +68,8 @@ npx expo start
 ```
 
 O Axios já está registrado nas dependências e foi adicionado com `npx expo install axios`, conforme o padrão do Expo.
+
+O frontend utiliza o Expo SDK 57. No iPhone, mantenha o Expo Go atualizado na App Store e reinicie o servidor com `npx expo start --clear` após atualizar as dependências.
 
 ## BASE_URL por ambiente
 

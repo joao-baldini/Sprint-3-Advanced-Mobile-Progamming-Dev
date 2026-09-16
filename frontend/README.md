@@ -1,6 +1,6 @@
 # SPI Alert Mobile — Sprint 3
 
-Aplicativo Expo SDK 54 integrado à API Spring Boot da Metaindústria.
+Aplicativo Expo SDK 57 integrado à API Spring Boot da Metaindústria e compatível com o Expo Go 57 para iOS e Android.
 
 ## Executar
 
