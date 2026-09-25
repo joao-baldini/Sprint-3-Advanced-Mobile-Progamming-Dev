@@ -9,4 +9,4 @@ npm ci
 npx expo start
 ```
 
-O app usa `src/services/api.ts` e `src/services/alertaService.ts` para listar, criar e consultar alertas reais. Para instruções completas de backend, ambientes e testes, consulte o `README.md` da raiz da Sprint 3.
+O app usa `src/services/api.ts` e `src/services/alertaService.ts` para listar, criar e consultar alertas reais. O backend de referência está em [Backend-Sprint-1-Advanced-Programming-Mobile-Dev](https://github.com/joao-baldini/Backend-Sprint-1-Advanced-Programming-Mobile-Dev), e a versão final integrada já inclui o backend na pasta `../backend`. Para instruções completas, integrantes, RMs, ambientes, testes e vídeo, consulte o [README principal](../README.md).

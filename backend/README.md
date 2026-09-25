@@ -4,13 +4,13 @@ API REST para gestão de **alertas de risco industrial**, desenvolvida com Sprin
 
 Nesta Sprint 3, o controller permite requisições do aplicativo Expo por meio de `@CrossOrigin`. Para o roteiro completo de integração, configuração da `BASE_URL` e execução das duas stacks, consulte o `README.md` da raiz da entrega.
 
-O sistema faz parte de uma solução de **Visão Computacional para Proteção Ativa de Funcionários em Ambientes Industriais**, onde câmeras detectam riscos em tempo real (ausência de EPI, posturas perigosas, aproximação de zonas restritas) e registram alertas para gestão e rastreabilidade.
+O sistema faz parte do tema **Visão Computacional para Proteção Ativa de Funcionários em Ambientes Industriais**. Esta API registra e consulta alertas, mas não processa imagens nem detecta riscos automaticamente. Consulte o README da raiz para o escopo da entrega final.
 
 ---
 
 ## 🎯 Entidade Principal: `Alerta`
 
-Representa um alerta de risco gerado pelo sistema de visão computacional ao identificar uma situação de perigo em ambiente industrial.
+Representa um alerta de risco registrado para uma situação de perigo em ambiente industrial.
 
 | Campo             | Tipo            | Descrição                                                   |
 |-------------------|-----------------|-------------------------------------------------------------|
@@ -82,14 +82,13 @@ src/main/java/br/com/spi/alertapi/
 
 - Java 17 instalado → verificar com: `java -version`
 - Maven instalado → verificar com: `mvn -version`
-  - Alternativa: usar o Maven Wrapper incluído (`./mvnw`)
 
 ### Passo a passo
 
 **1. Clone o repositório**
 ```bash
-git clone <URL_DO_REPOSITORIO>
-cd spi-alert-api
+git clone https://github.com/joao-baldini/Sprint-3-Advanced-Mobile-Progamming-Dev.git
+cd Sprint-3-Advanced-Mobile-Progamming-Dev/backend
 ```
 
 **2. Compile o projeto**
@@ -106,7 +105,7 @@ A API estará disponível em: `http://localhost:8080`
 
 **4. Acesse o console do banco H2** *(opcional, para visualizar os dados)*
 - URL: `http://localhost:8080/h2-console`
-- JDBC URL: `jdbc:h2:file:./data/spidb`
+- JDBC URL: `jdbc:h2:file:./data/spidb;AUTO_SERVER=TRUE`
 - Username: `sa`
 - Password: *(deixar em branco)*
 

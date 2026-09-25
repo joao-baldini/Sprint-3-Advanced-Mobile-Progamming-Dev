@@ -1,156 +1,146 @@
-# Sprint 3 — Integração Frontend e Backend
+# SPI Alert / FutureVision — entrega final (Sprint 4)
 
-Entrega da Sprint 3 do projeto **SPI Alert / Metaindústria**. O aplicativo React Native com Expo consome registros reais da API Spring Boot; os dados mockados da Sprint 2 não são mais usados.
+Aplicativo React Native com Expo integrado a uma API Spring Boot para registrar e consultar **alertas de segurança na Metaindústria**. Esta é a versão final do trabalho de Advanced Programming & Mobile Dev, construída a partir do backend da Sprint 1, do frontend da Sprint 2 e da integração da Sprint 3.
 
-## O que foi integrado
+O regulamento do SPI Innovation Challenge propõe proteção ativa de funcionários: antecipar situações de risco antes que se tornem infrações ou acidentes, evoluindo de detecção de EPIs e análise de comportamento até alertas proativos. Nesta entrega da disciplina, o SPI Alert implementa a **parte de registro e consulta dos alertas** no app e na API. **Este repositório não executa visão computacional nem previsão automática em tempo real.**
 
-- Lista de alertas com `GET /alertas` ao abrir ou voltar para a tela.
-- Cadastro com `POST /alertas` e atualização da lista ao retornar.
-- Detalhe com nova consulta em `GET /alertas/{id}`.
-- Estados visuais de carregamento, lista vazia, sucesso e erro.
-- Nova tentativa e atualização por gesto de arrastar na lista.
-- Camada de serviços isolando Axios, URL e chamadas HTTP das telas.
-- CORS liberado no controller com `@CrossOrigin`.
-- Persistência em banco H2 no modo file.
+## Integrantes
 
-## Estrutura
+| Nome | RM |
+| --- | --- |
+| Lucas Costa Sanson | 556042 |
+| João Viviani Baldini | 558596 |
+| Giuliano Ferreira Venceslau | 558674 |
+| Eric Perez Martinez Melillo Siciliano | 558651 |
+| Enrico Nikolay Meirelles Zeronian | 558557 |
 
-```text
-Sprint-3-Integracao-Metaindustria/
-├── backend/                         API Spring Boot
-│   └── src/main/java/.../
-│       ├── controller/
-│       ├── model/
-│       ├── repository/
-│       └── service/
-└── frontend/                        Aplicativo Expo
-    └── src/
-        ├── components/
-        ├── screens/
-        ├── services/
-        │   ├── api.ts
-        │   └── alertaService.ts
-        └── types/
-```
+## Repositórios
 
-## Pré-requisitos
+| Etapa | Repositório |
+| --- | --- |
+| Backend, Sprint 1 | [Backend-Sprint-1-Advanced-Programming-Mobile-Dev](https://github.com/joao-baldini/Backend-Sprint-1-Advanced-Programming-Mobile-Dev) |
+| Frontend, Sprint 2 | [Frontend-Sprint-2-Advanced-Programming-Mobile-Dev](https://github.com/joao-baldini/Frontend-Sprint-2-Advanced-Programming-Mobile-Dev) |
+| **Código final integrado, Sprints 3 e 4** | **[Sprint-3-Advanced-Mobile-Progamming-Dev](https://github.com/joao-baldini/Sprint-3-Advanced-Mobile-Progamming-Dev)** |
 
-- Java 17
-- Maven 3.9 ou compatível
-- Node.js 22.13 ou superior
-- Expo Go compatível com SDK 57, em caso de teste no celular
+Para reproduzir a entrega final, clone apenas o último repositório: ele já contém `backend/` e `frontend/`.
 
-## Como subir o backend
+## O que foi entregue
 
-Abra um terminal na pasta `backend`:
+- Backend em camadas (`controller`, `service`, `repository`, `model`) com CRUD de alertas, validação, CORS e banco H2 em modo file.
+- App Expo com lista, cadastro e detalhe ligados à API. A pasta `frontend/src/services/` concentra a configuração HTTP e as operações da entidade.
+- A lista e o cadastro usam dados reais da API; o mock da Sprint 2 saiu do fluxo principal. Quando a API falha, o app mostra o erro e oferece nova tentativa.
+
+### Entidade `Alerta`
+
+| Campo | Tipo no JSON | Descrição |
+| --- | --- | --- |
+| `id` | número | Identificador gerado pelo backend |
+| `tipo` | texto | Ex.: `SEM_CAPACETE`, `SEM_COLETE`, `SEM_LUVA`, `POSTURA_RISCO`, `ZONA_PERIGOSA` |
+| `descricao` | texto | Ocorrência observada |
+| `nivelSeveridade` | texto | `BAIXO`, `MEDIO`, `ALTO` ou `CRITICO` |
+| `localizacao` | texto | Setor da ocorrência |
+| `cameraId` | texto | Identificação da câmera informada no cadastro |
+| `status` | texto | `ABERTO`, `EM_ANALISE`, `RESOLVIDO` ou `IGNORADO` |
+| `dataHoraAlerta` | data e hora | Momento da ocorrência, no formato `YYYY-MM-DDTHH:mm:ss` |
+| `dataHoraRegistro` | data e hora | Momento do registro, preenchido pelo backend |
+
+## Como executar do zero
+
+### 1. Pré-requisitos
+
+- **JDK 17** com compilador, não apenas JRE: `java -version` e `javac -version` devem mostrar a versão 17.
+- **Maven 3.9+**: `mvn -version` deve indicar que está usando o JDK 17.
+- **Node.js 22.13+** e npm: confira com `node --version` e `npm --version`.
+- **Expo Go compatível com SDK 57** no celular, ou um simulador/emulador compatível.
+
+### 2. Clonar e subir o backend
 
 ```bash
+git clone https://github.com/joao-baldini/Sprint-3-Advanced-Mobile-Progamming-Dev.git
+cd Sprint-3-Advanced-Mobile-Progamming-Dev/backend
 mvn spring-boot:run
 ```
 
-A API fica disponível em `http://localhost:8080`. O H2 grava os dados em `backend/data/spidb` e mantém os registros após reiniciar a aplicação.
+Deixe esse terminal aberto. A API responde em `http://localhost:8080`. Antes de iniciar o app, abra [http://localhost:8080/alertas](http://localhost:8080/alertas) no navegador ou faça `GET` nessa URL no Postman/Insomnia. A resposta deve ser JSON: `[]` em um banco novo ou uma lista de alertas já registrados.
 
-Antes de abrir o app, confirme no navegador, Postman ou Insomnia:
+O H2 usa `jdbc:h2:file:./data/spidb;AUTO_SERVER=TRUE`; a pasta `backend/data/` é criada localmente e os alertas persistem após reiniciar o backend. O console opcional fica em [http://localhost:8080/h2-console](http://localhost:8080/h2-console), usuário `sa`, senha vazia e URL JDBC igual à acima. O terminal do backend deve estar aberto na pasta `backend/` para que o caminho relativo do banco corresponda ao indicado.
 
-```text
-GET http://localhost:8080/alertas
+### 3. Configurar a URL da API para o dispositivo
+
+O arquivo `frontend/src/services/api.ts` define `BASE_URL`, timeout de 10 segundos e `Content-Type: application/json`. A variável `EXPO_PUBLIC_API_URL`, quando fornecida, substitui a URL padrão.
+
+| Onde o app roda | URL da API |
+| --- | --- |
+| Web no mesmo computador | `http://localhost:8080` (padrão) |
+| Simulador iOS no mesmo computador | `http://localhost:8080` (padrão) |
+| Emulador Android | `http://10.0.2.2:8080` (padrão) |
+| iPhone ou Android físico | `http://IP-DO-COMPUTADOR:8080` (configurar) |
+
+Em um **celular físico**, `localhost` aponta para o próprio telefone. Conecte o telefone e o computador à mesma rede Wi-Fi, descubra o IPv4 do computador com `ipconfig` no Windows e, em outro terminal PowerShell, configure a variável antes de iniciar o Expo:
+
+```powershell
+cd Sprint-3-Advanced-Mobile-Progamming-Dev/frontend
+$env:EXPO_PUBLIC_API_URL="http://192.168.0.10:8080"
+npm ci
+npx expo start --clear
 ```
 
-Uma API recém-iniciada pode responder `[]`; isso é válido.
+Substitua `192.168.0.10` pelo IP real do computador. Como alternativa, crie `frontend/.env.local` com `EXPO_PUBLIC_API_URL=http://IP-DO-COMPUTADOR:8080`; esse arquivo é ignorado pelo Git. Se o IP mudar, atualize a configuração e reinicie o Expo. Confira no navegador do próprio celular se `http://IP-DO-COMPUTADOR:8080/alertas` retorna JSON; se não abrir, verifique Wi-Fi e firewall da porta 8080.
 
-## Como subir o frontend
-
-Em outro terminal, abra a pasta `frontend`:
+Para **web, simulador iOS ou emulador Android**, com os padrões da tabela, basta iniciar o frontend em outro terminal:
 
 ```bash
+cd Sprint-3-Advanced-Mobile-Progamming-Dev/frontend
 npm ci
 npx expo start
 ```
 
-O Axios já está registrado nas dependências e foi adicionado com `npx expo install axios`, conforme o padrão do Expo.
+Leia o QR Code com o Expo Go no celular. Depois de mudar dependências ou `EXPO_PUBLIC_API_URL`, pare o servidor anterior e use `npx expo start --clear`.
 
-O frontend utiliza o Expo SDK 57. No iPhone, mantenha o Expo Go atualizado na App Store e reinicie o servidor com `npx expo start --clear` após atualizar as dependências.
+## Telas, serviços e endpoints
 
-## BASE_URL por ambiente
+As telas não fazem chamadas Axios diretamente. `frontend/src/services/api.ts` configura o cliente; `frontend/src/services/alertaService.ts` implementa `listar`, `buscarPorId` e `criar`.
 
-O arquivo `frontend/src/services/api.ts` define `baseURL`, timeout de 10 segundos e o header `Content-Type: application/json`.
+| Fluxo no app | Serviço | Endpoint | Resultado esperado |
+| --- | --- | --- | --- |
+| Abrir/atualizar a lista | `alertaService.listar()` | `GET /alertas` | `200 OK` e array JSON |
+| Registrar no formulário | `alertaService.criar(novoAlerta)` | `POST /alertas` | `201 Created`, com `id` e `dataHoraRegistro` |
+| Abrir um item | `alertaService.buscarPorId(id)` | `GET /alertas/{id}` | `200 OK` e objeto JSON |
 
-| Ambiente | URL padrão |
-|---|---|
-| Web | `http://localhost:8080` |
-| Simulador iOS | `http://localhost:8080` |
-| Emulador Android | `http://10.0.2.2:8080` |
-| Celular físico | IP da máquina na rede local |
+O backend também oferece `PUT /alertas/{id}`, `DELETE /alertas/{id}` e filtros `GET /alertas/severidade/{nivel}`, `GET /alertas/status/{status}` e `GET /alertas/localizacao/{local}`. Essas rotas não são usadas pelas três telas principais.
 
-Para um celular físico, informe o IP da máquina antes de iniciar o Expo. Exemplo no PowerShell:
+## Como comprovar a integração
 
-```powershell
-$env:EXPO_PUBLIC_API_URL="http://192.168.0.10:8080"
-npx expo start --clear
-```
+1. Com as duas aplicações em execução, confira `GET /alertas` no navegador/Postman/Insomnia. `[]` significa que ainda não há registros.
+2. No app, toque em **+ Novo**, escolha tipo, severidade e status, preencha descrição, localização e ID da câmera e toque em **Registrar Alerta**.
+3. Ao retornar, veja o novo alerta na lista e abra seu detalhe. O detalhe faz uma nova consulta pelo ID; o app não depende do objeto da lista para montar a tela.
+4. Repita `GET /alertas` ou acesse `GET /alertas/{id}` na API. O JSON deve conter o mesmo alerta, agora com `id` e `dataHoraRegistro` atribuídos pelo backend.
+5. Pare o backend com `Ctrl+C`. Feche e reabra o app (ou reinicie o Expo Go) para recarregar a lista do zero: em até 10 segundos aparecerá **Backend indisponível** e **Tentar novamente**, sem dados de mock. Se apenas atualizar a lista enquanto ela já mostrava registros, os últimos itens podem continuar visíveis junto do aviso de erro até a próxima abertura do app.
+6. Inicie novamente `mvn spring-boot:run` e use **Tentar novamente**. Os registros anteriores devem reaparecer porque o H2 está em modo file.
 
-O computador e o celular devem estar na mesma rede. Troque `192.168.0.10` pelo IPv4 da máquina e permita a porta 8080 no firewall, se necessário.
+O cadastro mantém os campos digitados quando o `POST` falha, permitindo tentar novamente após restaurar a API. Uma lista vazia com o backend ativo é diferente de um erro de conexão: ela mostra **Nenhum alerta registrado**.
 
-## Camada de serviços
-
-As telas não importam Axios e não montam URLs:
-
-- `api.ts`: configura a instância Axios e escolhe a `BASE_URL`.
-- `alertaService.ts`: expõe `listar`, `buscarPorId` e `criar`.
-- `criar` recebe `NovoAlerta`, definido com `Omit<Alerta, "id" | "dataHoraRegistro">`; esses dois campos são gerados pelo backend.
-
-## Endpoints
-
-| Método | Endpoint | Uso no app |
-|---|---|---|
-| `GET` | `/alertas` | Listar registros |
-| `GET` | `/alertas/{id}` | Consultar detalhe |
-| `POST` | `/alertas` | Criar registro |
-| `PUT` | `/alertas/{id}` | Atualizar, disponível na API |
-| `DELETE` | `/alertas/{id}` | Excluir, disponível na API |
-
-A API também mantém os filtros da Sprint 1:
-
-```text
-GET /alertas/severidade/{nivel}
-GET /alertas/status/{status}
-GET /alertas/localizacao/{local}
-```
-
-Exemplo de cadastro:
-
-```json
-{
-  "tipo": "SEM_CAPACETE",
-  "descricao": "Funcionário detectado sem capacete de proteção",
-  "nivelSeveridade": "ALTO",
-  "localizacao": "LINHA_PRODUCAO_3",
-  "cameraId": "CAM-003",
-  "status": "ABERTO",
-  "dataHoraAlerta": "2026-05-21T14:30:00"
-}
-```
-
-## Como testar a integração
-
-1. Inicie o backend e confirme que `GET /alertas` retorna JSON.
-2. Inicie o Expo no ambiente desejado.
-3. Abra a lista; ela deve refletir os registros do H2.
-4. Cadastre um alerta; o backend deve responder `201 Created`.
-5. Ao voltar, confirme que o novo alerta aparece na lista.
-6. Abra o registro; a tela de detalhe fará `GET /alertas/{id}`.
-7. Pare o backend e atualize a lista para conferir o estado de indisponibilidade e o botão **Tentar novamente**.
-
-Validações automatizadas:
+### Verificação do código
 
 ```bash
 cd backend
 mvn test
 
 cd ../frontend
+npm ci
 npx tsc --noEmit
+npx expo-doctor
 ```
 
-## Comportamento com o backend parado
+## Vídeo da apresentação
 
-O aplicativo encerra o carregamento após o timeout, informa que a API está indisponível e oferece nova tentativa. No cadastro, os dados digitados permanecem na tela para que o usuário possa reenviar depois de restabelecer o backend.
+**Link do YouTube: pendente de gravação e publicação como Não listado.** Antes da entrega, substituir esta linha pela URL do vídeo; vídeos configurados como **Privado** não poderão ser assistidos pelo professor. Duração máxima: **5 minutos**.
+
+Roteiro sugerido:
+
+1. Mostrar este README, os três repositórios e os integrantes.
+2. Iniciar o backend e mostrar `GET /alertas` retornando JSON.
+3. Abrir o app e mostrar a lista carregada pela API.
+4. Criar um alerta no app e conferir o mesmo registro em `GET /alertas` ou `GET /alertas/{id}`.
+5. Parar o backend com `Ctrl+C`.
+6. Reabrir o app e mostrar a mensagem de indisponibilidade, sem dados de mock.
