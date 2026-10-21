@@ -134,7 +134,7 @@ npx expo-doctor
 
 ## Vídeo da apresentação
 
-**Link do YouTube: pendente de gravação e publicação como Não listado.** Antes da entrega, substituir esta linha pela URL do vídeo; vídeos configurados como **Privado** não poderão ser assistidos pelo professor. Duração máxima: **5 minutos**.
+**Vídeo da apresentação:** [Assistir no YouTube](https://www.youtube.com/watch?v=Rl1eZ27azc4)
 
 Roteiro sugerido:
 
