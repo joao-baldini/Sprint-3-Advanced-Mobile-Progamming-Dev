@@ -135,12 +135,3 @@ npx expo-doctor
 ## Vídeo da apresentação
 
 **Vídeo da apresentação:** [Assistir no YouTube](https://www.youtube.com/watch?v=Rl1eZ27azc4)
-
-Roteiro sugerido:
-
-1. Mostrar este README, os três repositórios e os integrantes.
-2. Iniciar o backend e mostrar `GET /alertas` retornando JSON.
-3. Abrir o app e mostrar a lista carregada pela API.
-4. Criar um alerta no app e conferir o mesmo registro em `GET /alertas` ou `GET /alertas/{id}`.
-5. Parar o backend com `Ctrl+C`.
-6. Reabrir o app e mostrar a mensagem de indisponibilidade, sem dados de mock.
